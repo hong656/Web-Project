@@ -24,9 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = trim($data->address ?? '');
     $email = trim($data->email ?? '');
     $password = $data->password ?? '';
+    $year = isset($data->year) ? (int) $data->year : null;
 
     if (empty($name) || empty($address) || empty($email) || empty($password)) {
         echo json_encode(['status' => false, 'message' => 'All fields are required']);
+        exit;
+    }
+
+    if (!in_array($year, [1, 2, 3, 4])) {
+        echo json_encode(['status' => false, 'message' => 'Invalid or missing year']);
         exit;
     }
 
@@ -41,10 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO students (name, address, email, password) VALUES (:name, :address, :email, :password)");
+    $stmt = $conn->prepare("INSERT INTO students (name, address, email, password, year) VALUES (:name, :address, :email, :password, :year)");
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':address', $address);
     $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':year', $year);
     $stmt->bindParam(':password', $hashedPassword);
 
     if ($stmt->execute()) {

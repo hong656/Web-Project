@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'id' => $id,
                 'name' => $name,
                 'address' => $address,
+                'year' => $year,
                 'email' => $email,  // Include email
             ));
         }
