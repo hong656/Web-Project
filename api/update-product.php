@@ -17,9 +17,15 @@ $id = $_POST['id'] ?? null;
 $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? null;
 $price = $_POST['price'] ?? null;
+$type = isset($_POST['type']) ? (int) $_POST['type'] : null;
 
 if (!$id || empty($title)) {
     echo json_encode(['status' => false, 'message' => 'ID and title are required']);
+    exit;
+}
+
+if (!in_array($type, [1, 2, 3])) {
+    echo json_encode(['status' => false, 'message' => 'Invalid or missing product type']);
     exit;
 }
 
@@ -58,11 +64,12 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 try {
     $stmt = $conn->prepare("
         UPDATE products 
-        SET title = :title, description = :description, price = :price, image = :image 
+        SET title = :title, description = :description, type = :type , price = :price, image = :image 
         WHERE id = :id
     ");
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':type', $type);
     $stmt->bindParam(':price', $price);
     $stmt->bindParam(':image', $imagePath);
     $stmt->bindParam(':id', $id);

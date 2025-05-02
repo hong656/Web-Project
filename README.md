@@ -1,2 +1,3 @@
 run : php -S localhost:8000
-migrate:fresh : php productTable.php (for productTable)
+recreate-table : php productTable.php (for product table)
+recreate-table : php setup.php (for students table)

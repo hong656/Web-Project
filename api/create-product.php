@@ -13,17 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Check required fields
 $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? null;
 $price = $_POST['price'] ?? null;
+$type = isset($_POST['type']) ? (int) $_POST['type'] : null;
 
 if (empty($title)) {
     echo json_encode(['status' => false, 'message' => 'Title is required']);
     exit;
 }
 
-// Handle file upload if exists
+if (!in_array($type, [1, 2, 3])) {
+    echo json_encode(['status' => false, 'message' => 'Invalid or missing product type']);
+    exit;
+}
+
 $imagePath = null;
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     $uploadDir = '../uploads/';
@@ -42,13 +46,13 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     }
 }
 
-// Insert into DB
 try {
-    $stmt = $conn->prepare("INSERT INTO products (title, description, price, image) VALUES (:title, :description, :price, :image)");
+    $stmt = $conn->prepare("INSERT INTO products (title, description, price, image, type) VALUES (:title, :description, :price, :image, :type)");
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':price', $price);
     $stmt->bindParam(':image', $imagePath);
+    $stmt->bindParam(':type', $type, PDO::PARAM_INT);
 
     $stmt->execute();
 
