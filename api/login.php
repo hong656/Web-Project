@@ -1,10 +1,23 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+// Handle CORS and preflight requests
+header('Access-Control-Allow-Origin: http://localhost:3000'); // or '*', but localhost:3000 is safer for dev
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+
+// Respond to OPTIONS preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 include_once '../config/Database.php';
 include_once '../models/Student.php';
+
+function generateToken($length = 64) {
+    return bin2hex(random_bytes($length / 2));
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -17,11 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $data->password ?? '';
 
     if (empty($email) || empty($password)) {
-        echo json_encode(['message' => 'Email and password are required']);
+        echo json_encode(['status' => false, 'message' => 'Email and password are required']);
         exit;
     }
 
-    // Prepare statement
     $stmt = $conn->prepare("SELECT * FROM students WHERE email = :email");
     $stmt->bindParam(':email', $email);
     $stmt->execute();
@@ -29,10 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->rowCount() === 1) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verify password
         if (password_verify($password, $user['password'])) {
+            $token = generateToken();
+
             echo json_encode([
+                'status' => true,
                 'message' => 'Login successful',
+                'token' => $token,
                 'user' => [
                     'id' => $user['id'],
                     'name' => $user['name'],
@@ -40,13 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]
             ]);
         } else {
-            echo json_encode(['message' => 'Incorrect password']);
+            echo json_encode(['status' => false, 'message' => 'Incorrect password']);
         }
     } else {
-        echo json_encode(['message' => 'User not found']);
+        echo json_encode(['status' => false, 'message' => 'User not found']);
     }
 
 } else {
-    echo json_encode(['message' => 'Invalid request method']);
+    echo json_encode(['status' => false, 'message' => 'Invalid request method']);
 }
-?>

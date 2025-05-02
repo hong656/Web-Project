@@ -27,12 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'id' => $id,
                 'name' => $name,
                 'address' => $address,
-                'age' => $age,
                 'email' => $email,  // Include email
             ));
         }
 
-        // Return the students data as JSON
         echo json_encode($students);
 
     } else {

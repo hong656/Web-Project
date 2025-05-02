@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Assign data to the student object
     $student->name = $data->name;
     $student->address = $data->address;
-    $student->age = $data->age;
     $student->email = $data->email;  // New field
     $student->password = password_hash($data->password, PASSWORD_DEFAULT);  // Hash the password
 

@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'id' => $student->id,
                 'name' => $student->name,
                 'address' => $student->address,
-                'age' => $student->age,
                 'email' => $student->email // password excluded
             ));
 

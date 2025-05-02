@@ -18,7 +18,6 @@
         $student->id = isset($data->id) ? $data->id : null;
         $student->name = $data->name;
         $student->address = $data->address;
-        $student->age = $data->age;
         $student->email = $data->email;
 
         // Only hash password if it's provided

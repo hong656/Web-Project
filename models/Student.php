@@ -7,7 +7,6 @@ class Student {
     public $id;
     public $name;
     public $address;
-    public $age;
     public $email;
     public $password;
 
@@ -34,7 +33,6 @@ class Student {
             $this->id = $row['id'];
             $this->name = $row['name'];
             $this->address = $row['address'];
-            $this->age = $row['age'];
             $this->email = $row['email']; // Add email
             $this->password = $row['password']; // Add password
 
@@ -51,7 +49,6 @@ class Student {
         // Bind the parameters
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':address', $this->address);
-        $stmt->bindParam(':age', $this->age);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':password', $this->password); // Ensure password is hashed
 
@@ -71,7 +68,6 @@ class Student {
         // Bind the parameters
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':address', $this->address);
-        $stmt->bindParam(':age', $this->age);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':password', $this->password); // Ensure password is hashed
         $stmt->bindParam(':id', $this->id);
