@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://school-supply-store.vercel.app');
 header('Content-Type: application/json');
 
 require_once '../config/Database.php';
