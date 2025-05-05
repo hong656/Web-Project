@@ -1,6 +1,6 @@
 <?php
 // Handle CORS and preflight requests
-header('Access-Control-Allow-Origin: http://localhost:3000'); // or '*', but localhost:3000 is safer for dev
+header('Access-Control-Allow-Origin: https://school-supply-store.vercel.app');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
